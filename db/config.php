@@ -6,7 +6,7 @@ server with default setting (user 'root' with no password) */
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-define('DB_NAME', 'it28-ecommerce');
+define('DB_NAME', 'e-commerce');
  
 /* Attempt to connect to MySQL database */
 try{

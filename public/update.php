@@ -1,81 +1,66 @@
-
 <?php
 // Include config file
-require_once "config.php";
+require_once "../db/config.php";
  
 // Define variables and initialize with empty values
-$thumbnaillink = $productname = $description = $retailprice = "";
-$thumbnaillink_err = $productname_err = $description_err = $retailprice_err = "";
+$product_name = $product_details = $product_retail_price = "";
+$product_name_err = $product_details_err = $product_retail_price_err = "";
  
 // Processing form data when form is submitted
-if(isset($_POST["productid"]) && !empty($_POST["productid"])){
+if(isset($_POST["product_id"]) && !empty($_POST["product_id"])){
     // Get hidden input value
-    $productid = $_POST["productid"];
+    $product_id = $_POST["product_id"];
     
-    // Validate thumbnail link
-    $input_thumbnaillink = trim($_POST["thumbnaillink"]);
-    if(empty($input_thumbnaillink)){
-        $thumbnaillink_err = "Please enter a thumbnail link.";
-    } elseif(!filter_var($input_thumbnaillink, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
-        $thumbnaillink_err = "Please enter a valid thumbnail link.";
-    } else{
-        $thumbnaillink = $input_thumbnaillink;
-    }
-
     // Validate name
-    $input_productname = trim($_POST["productname"]);
-    if(empty($input_productname)){
-        $productname_err = "Please enter a product name.";
-    } elseif(!filter_var($input_productname, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
-        $productname_err = "Please enter a valid product name.";
+    $input_product_name = trim($_POST["product_name"]);
+    if(empty($input_product_name)){
+        $product_name_err = "Please enter a name.";
+    } elseif(!filter_var($input_product_name, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
+        $product_name_err = "Please enter a valid name.";
     } else{
-        $productname = $input_productname;
+        $product_name = $input_product_name;
     }
     
-    // Validate address address
-    $input_description = trim($_POST["description"]);
-    if(empty($input_description)){
-        $description_err = "Please enter a description.";     
+    // Validate product details
+    $input_product_details = trim($_POST["product_details"]);
+    if(empty($input_product_details)){
+        $aproduct_details_err = "Please enter product details.";     
     } else{
-        $description = $input_description;
+        $product_details = $input_product_details;
     }
     
-    // Validate salary
-    $input_retailprice = trim($_POST["retailprice"]);
-    if(empty($input_retailprice)){
-        $retailprice_err = "Please enter the retail price.";     
-    }
-    //  elseif(!ctype_digit($input_retailprice)){
-    //     $retailprice_err = "Please enter a positive integer value.";
-    // }
-     else{
-        $retailprice = $input_retailprice;
+    // Validate product retail price
+    $input_product_retail_price = trim($_POST["product_retail_price"]);
+    if(empty($input_product_retail_price)){
+        $product_retail_price_err = "Please enter the retail price amount.";     
+    } elseif(!ctype_digit($input_product_retail_price)){
+        $product_retail_price_err = "Please enter a positive integer value.";
+    } else{
+        $product_retail_price = $input_product_retail_price;
     }
     
     // Check input errors before inserting in database
-    if(empty($productname_err) && empty($description_err) && empty($retailprice_err)){
+    if(empty($product_name_err) && empty($product_details_err) && empty($product_retail_price_err)){
         // Prepare an update statement
-        $sql = "UPDATE products SET product_thumbnail_link=:thumbnaillink, product_name=:productname, product_description=:description, product_retail_price=:retailprice WHERE product_id=:productid";
+        $sql = "UPDATE products SET product_name=:product_name, product_details=:product_details, product_retail_price=:product_retail_price WHERE product_id=:product_id";
  
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(":thumbnaillink", $param_thumbnaillink);
-            $stmt->bindParam(":productname", $param_productname);
-            $stmt->bindParam(":description", $param_description);
-            $stmt->bindParam(":retailprice", $param_retailprice);
-            $stmt->bindParam(":productid", $param_productid);
+            $stmt->bindParam(":product_name", $param_product_name);
+            $stmt->bindParam(":product_details", $param_product_details);
+            $stmt->bindParam(":product_retail_price", $param_product_retail_price);
+            $stmt->bindParam(":product_id", $param_product_id);
             
             // Set parameters
-            $param_thumbnaillink = $thumbnaillink;
-            $param_productname = $productname;
-            $param_description = $description;
-            $param_retailprice = $retailprice;
-            $param_productid = $productid;
+            $param_product_name = $product_name;
+            $param_product_details = $product_details;
+            $param_product_retail_price = $product_retail_price;
+            $param_product_id = $product_id;
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
                 // Records updated successfully. Redirect to landing page
-                header("location: index.php");
+                header("location: ../index.php");
                 exit();
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
@@ -90,18 +75,18 @@ if(isset($_POST["productid"]) && !empty($_POST["productid"])){
     unset($pdo);
 } else{
     // Check existence of id parameter before processing further
-    if(isset($_GET["productid"]) && !empty(trim($_GET["productid"]))){
+    if(isset($_GET["product_id"]) && !empty(trim($_GET["product_id"]))){
         // Get URL parameter
-        $productid =  trim($_GET["productid"]);
+        $product_id =  trim($_GET["product_id"]);
         
         // Prepare a select statement
-        $sql = "SELECT * FROM products WHERE product_id = :productid";
+        $sql = "SELECT * FROM products WHERE product_id = :product_id";
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(":productid", $param_productid);
+            $stmt->bindParam(":product_id", $param_product_id);
             
             // Set parameters
-            $param_productid = $productid;
+            $param_product_id = $product_id;
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
@@ -111,13 +96,12 @@ if(isset($_POST["productid"]) && !empty($_POST["productid"])){
                     $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                     // Retrieve individual field value
-                    $thumbnaillink = $row["product_thumbnail_link"];
-                    $productname = $row["product_name"];
-                    $description = $row["product_description"];
-                    $retailprice = $row["product_retail_price"];
+                    $product_name = $row["product_name"];
+                    $product_details = $row["product_details"];
+                    $product_retail_price = $row["product_retail_price"];
                 } else{
                     // URL doesn't contain valid id. Redirect to error page
-                    header("location: error.php");
+                    header("location: ../public/error.php");
                     exit();
                 }
                 
@@ -133,7 +117,7 @@ if(isset($_POST["productid"]) && !empty($_POST["productid"])){
         unset($pdo);
     }  else{
         // URL doesn't contain id parameter. Redirect to error page
-        header("location: error.php");
+        header("location: ../public/error.php");
         exit();
     }
 }
@@ -158,35 +142,61 @@ if(isset($_POST["productid"]) && !empty($_POST["productid"])){
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="mt-5">Update Record</h2>
-                    <p>Please edit the input values and submit to update the employee record.</p>
+                    <p>Please edit the input values and submit to update the product record.</p>
                     <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
                         <div class="form-group">
-                            <label>Thumbnail link</label>
-                            <input type="text" name="thumbnaillink" class="form-control <?php echo (!empty($thumbnaillink_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $thumbnaillink; ?>">
-                            <span class="invalid-feedback"><?php echo $thumbnaillink_err;?></span>
+                            <label>Name</label>
+                            <input type="text" name="product_name" class="form-control <?php echo (!empty($product_name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $product_name; ?>">
+                            <span class="invalid-feedback"><?php echo $product_name_err;?></span>
                         </div>
                         <div class="form-group">
-                            <label>Product Name</label>
-                            <input type="text" name="productname" class="form-control <?php echo (!empty($productname_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $productname; ?>">
-                            <span class="invalid-feedback"><?php echo $productname_err;?></span>
+                            <label>Product Details</label>
+                            <textarea name="product_details" class="form-control <?php echo (!empty($product_details_err)) ? 'is-invalid' : ''; ?>"><?php echo $product_details; ?></textarea>
+                            <span class="invalid-feedback"><?php echo $product_details_err;?></span>
                         </div>
                         <div class="form-group">
-                            <label>Description</label>
-                            <textarea name="description" class="form-control <?php echo (!empty($description_err)) ? 'is-invalid' : ''; ?>"><?php echo $description; ?></textarea>
-                            <span class="invalid-feedback"><?php echo $description_err;?></span>
+                            <label>Product Retail Price</label>
+                            <input type="text" name="product_retail_price" class="form-control <?php echo (!empty($product_retail_price_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $product_retail_price; ?>">
+                            <span class="invalid-feedback"><?php echo $product_retail_price_err;?></span>
                         </div>
-                        <div class="form-group">
-                            <label>Retail price</label>
-                            <input type="text" name="retailprice" class="form-control <?php echo (!empty($retailprice_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $retailprice; ?>">
-                            <span class="invalid-feedback"><?php echo $retailprice_err;?></span>
+                        
+                        <!--Initialize product id-->
+                        <input type="hidden" name="product_id" value="<?php echo $product_id; ?>"/>
+                        
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveUpdateChangesModal">
+                            Save Changes
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="saveUpdateChangesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Save changes?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Submit">
+                            </div>
+                            </div>
                         </div>
-                        <input type="hidden" name="productid" value="<?php echo $productid; ?>"/>
-                        <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="index.php" class="btn btn-secondary ml-2">Cancel</a>
+                        </div>
+
+                        <a href="../index.php" class="btn btn-secondary ml-2">Cancel</a>
                     </form>
                 </div>
             </div>        
         </div>
     </div>
+
+<!--Additional Bootstrap Dependancies-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
