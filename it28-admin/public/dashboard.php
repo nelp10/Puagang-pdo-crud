@@ -13,7 +13,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome</title>
+    <title>Admin - Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -57,7 +57,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
 <div class="container-fluid" >
     <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
-        <div class="card-header" href="products.php">Products Recorded</div>
+        <div class="card-header" href="products.php">Products Available</div>
         <div class="card-body">
             <h5 class="card-title "></h5>
             
@@ -87,7 +87,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             unset($stmt);
             ?>
             
-            <p class="card-text">Date and Time: <?php echo date("Y-m-d H:i:s"); ?></p>
+            <!-- <p class="card-text">Date and Time: <?php echo date("Y-m-d H:i:s"); ?></p> -->
+            <!-- <p class="card-text text-center">Products Available</p> -->
         </div>
     </div>
 </div>

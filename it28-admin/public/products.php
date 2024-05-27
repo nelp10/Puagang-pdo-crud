@@ -43,10 +43,10 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-     <!--<a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>-->
-        <a href="../public/user/logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
+      <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> -->
+      <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+     <!-- <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a> -->
+        <a href="../public/user/logout.php" class="btn btn-danger ml-3">Sign Out</a>
     </form>
   </div>
 </nav>
@@ -72,10 +72,10 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     if($result->rowCount() > 0){
                         // Define the table template
                         $tableTemplate = '
-                                <table class="table table-bordered table-striped">
+                                <table class="table table-bordered dataTable table-striped" id="sort">
                                     <thead>
                                         <tr>
-                                            <th> <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                                        <th> <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" aria-controls="sort">
                                         </th>
                                         <th class="text-center" colspan="8"><h6>Showing ' . $totalRows . ' / ' . $totalRows . ' Records</h6></th>
 
@@ -83,7 +83,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                                     </thead>                               
                                 </table>
                               
-                                <table class="table table-bordered table-striped">
+                                <table class="table table-bordered dataTable table-striped" id="sort">
                                     <thead>
                                         <tr>
                                             <th>Record Number</th>
@@ -127,7 +127,11 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                         while ($row = $result->fetch()) {
                             $rowHtml = str_replace(
                                 array('{{id}}', '{{title}}', '{{description}}', '{{price}}', '{{rrp}}', '{{quantity}}', '{{img}}', '{{date_added}}'),
-                                array($row['id'], $row['title'], $row['description'], $row['price'], $row['rrp'], $row['quantity'], $row['img'], $row['date_added']),
+                                array($row['id'], $row['title'], $row['description'], $row['price'], $row['rrp'], $row['quantity'],
+                                //  $row ['img']
+                                 $row ['img']
+                            
+                                 , $row['date_added']),
                                 $rowTemplate
                             );
                             $rows .= $rowHtml;
@@ -155,3 +159,13 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
 </body>
 </html>
+
+<script>
+    $(document).ready(function(){
+        $('#sort').DataTable({
+            "aaSorting": []
+        })
+
+    });
+
+</script>
